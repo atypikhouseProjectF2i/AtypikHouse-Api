@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ReviewRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ApiResource()]
@@ -16,9 +17,11 @@ class Review
     private $id;
 
     #[ORM\Column(type: 'text')]
+    #[Groups(['readAccommodation'])]
     private $comment;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['readAccommodation'])]
     private $score;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reviews')]
