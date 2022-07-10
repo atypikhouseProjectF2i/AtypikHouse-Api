@@ -11,6 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AccommodationRepository::class)]
 #[ApiResource(
+    attributes: ["pagination_enabled" => true],
     collectionOperations: [
         "get",
         "post" => ["security" => "is_granted('ROLE_ADMIN')"],
@@ -57,10 +58,6 @@ class Accommodation
     #[Groups(['readAccommodation'])]
     private $city;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['readAccommodation'])]
-    private $region;
-
     #[ORM\Column(type: 'integer')]
     #[Groups(['readAccommodation'])]
     private $nbSleeping;
@@ -101,6 +98,10 @@ class Accommodation
 
     #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: Booking::class)]
     private $bookings;
+
+    #[ORM\ManyToOne(targetEntity: Region::class, inversedBy: 'accommodations')]
+    #[Groups(['readAccommodation'])]
+    private $region;
 
 
     public function __construct()
@@ -202,17 +203,6 @@ class Accommodation
         return $this;
     }
 
-    public function getRegion(): ?string
-    {
-        return $this->region;
-    }
-
-    public function setRegion(string $region): self
-    {
-        $this->region = $region;
-
-        return $this;
-    }
 
     public function getNbSleeping(): ?int
     {
@@ -432,6 +422,18 @@ class Accommodation
                 $booking->setAccommodation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRegion(): ?region
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?region $region): self
+    {
+        $this->region = $region;
 
         return $this;
     }
