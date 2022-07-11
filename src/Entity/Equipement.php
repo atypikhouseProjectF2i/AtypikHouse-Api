@@ -10,7 +10,22 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 #[ORM\Entity(repositoryClass: EquipementRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    itemOperations: [
+        "put" => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ],
+        "delete" => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ],
+    ],
+)]
 class Equipement
 {
     #[ORM\Id]

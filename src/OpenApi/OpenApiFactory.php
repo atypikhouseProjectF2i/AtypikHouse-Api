@@ -25,6 +25,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
             }
         }
 
+        //new schema for the Bearer Auth
         $schemas = $openApi->getComponents()->getSecuritySchemes();
         $schemas['bearerAuth'] = new \ArrayObject([
             'type' => 'http',
@@ -32,25 +33,37 @@ class OpenApiFactory implements OpenApiFactoryInterface
             'bearer' => 'JWT'
         ]);
 
+        //new schema for credentials login
         $schemas = $openApi->getComponents()->getSchemas();
         $schemas['Credentials'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
                 'username' => [
                     'type' => 'string',
-                    'example' => 'john@doe.fr',
+                    'example' => 'user0@gmail.com',
                 ],
                 'password' => [
                     'type' => 'string',
-                    'example' => '0000'
+                    'example' => 'mypassword'
+                ]
+            ]
+        ]);
+        $schemas['Token'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'token' => [
+                    'type' => 'string',
+                    'readOnly' => true
                 ]
             ]
         ]);
 
+        //add path /api/me
         $meOperation = $openApi->getPaths()->getPath('/api/me')->getGet()->withParameters([]);
         $mePathItem = $openApi->getPaths()->getPath('/api/me')->withGet($meOperation);
         $openApi->getPaths()->addPath('/api/me', $mePathItem);
 
+        //context on login
         $pathItem = new PathItem(
             post: new Operation(
                 operationId: 'postApiLogin',
@@ -78,6 +91,8 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ]
             )
         );
+        $openApi->getPaths()->addPath('/api/login', $pathItem);
+
 
         return $openApi;
     }

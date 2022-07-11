@@ -10,7 +10,28 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: RegionRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    itemOperations: [
+        "put" => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ],
+        "delete" => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ],
+        "post" => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ],
+    ],
+)]
 class Region
 {
     #[ORM\Id]

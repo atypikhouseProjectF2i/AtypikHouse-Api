@@ -13,7 +13,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     attributes: ["pagination_enabled" => true],
     collectionOperations: [
-        "get",
+        "get" => [
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ],
         "post" => ["security" => "is_granted('ROLE_ADMIN')"],
     ],
     itemOperations: [

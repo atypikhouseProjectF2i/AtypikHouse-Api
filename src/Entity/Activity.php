@@ -10,7 +10,22 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ActivityRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    itemOperations: [
+        "put" => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ],
+        "delete" => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ],
+    ],
+)]
 class Activity
 {
     #[ORM\Id]

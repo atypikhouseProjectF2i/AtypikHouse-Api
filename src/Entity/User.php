@@ -16,14 +16,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     security: 'is_granted("ROLE_USER")',
-    collectionOperations: [],
-    itemOperations: [
+    collectionOperations: [
         'get' => [
-            'controller' => NotFoundAction::class,
-            'openapi_context' => ['summary' => 'hidden'],
-            'read' => false,
-            'output' => false
-        ],
+            ['security' => "is_granted('ROLE_ADMIN')"]
+        ]
+    ],
+    itemOperations: [
+        // 'get' => [
+        //     'controller' => NotFoundAction::class,
+        //     'openapi_context' => ['summary' => 'hidden'],
+        //     'read' => false,
+        //     'output' => false
+        // ],
+        'get',
         'me' => [
             'pagination_enabled' => false,
             'path' => '/me',
@@ -33,7 +38,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]]
             ]
-        ]
+        ],
+        'put' => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"]
     ],
     normalizationContext: ['groups' => ['read:User']]
 )]
