@@ -12,6 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: RegionRepository::class)]
 #[ApiResource(
     itemOperations: [
+        "get",
         "put" => [
             "security" => "is_granted('ROLE_ADMIN')",
             'openapi_context' => [
@@ -24,13 +25,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 'security' => [['bearerAuth' => []]]
             ]
         ],
+    ],
+    collectionOperations: [
+        "get",
         "post" => [
             "security" => "is_granted('ROLE_ADMIN')",
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]]
             ]
         ],
-    ],
+    ]
 )]
 class Region
 {
@@ -43,7 +47,7 @@ class Region
     #[Groups(['readAccommodation'])]
     private $name;
 
-    #[ORM\OneToMany(mappedBy: 'Region', targetEntity: Accommodation::class)]
+    #[ORM\OneToMany(mappedBy: 'region', targetEntity: Accommodation::class)]
     private $accommodations;
 
     public function __construct()

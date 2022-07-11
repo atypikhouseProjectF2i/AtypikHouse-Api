@@ -24,6 +24,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 'security' => [['bearerAuth' => []]]
             ]
         ],
+    ],
+    collectionOperations: [
         "post" => [
             "security" => "is_granted('ROLE_ADMIN')",
             'openapi_context' => [
