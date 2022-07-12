@@ -11,6 +11,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: RegionRepository::class)]
 #[ApiResource(
+    attributes: [
+        'pagination_enabled' => false,
+    ],
     itemOperations: [
         "get",
         "put" => [
