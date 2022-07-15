@@ -2,12 +2,24 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\BookingRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    attributes: ["pagination_enabled" => false],
+    subresourceOperations: [],
+    collectionOperations: [
+        "get",
+    ],
+    normalizationContext: ['groups' => ['readBooking']],
+)]
+#[ApiFilter(SearchFilter::class, properties: ['accommodation.user' => 'exact'])]
 class Booking
 {
     #[ORM\Id]
@@ -16,18 +28,23 @@ class Booking
     private $id;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['readBooking'])]
     private $total;
 
     #[ORM\Column(type: 'date')]
+    #[Groups(['readBooking'])]
     private $startDate;
 
     #[ORM\Column(type: 'date')]
+    #[Groups(['readBooking'])]
     private $endDate;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'bookings')]
+    #[Groups(['readBooking'])]
     private $user;
 
     #[ORM\ManyToOne(targetEntity: Accommodation::class, inversedBy: 'bookings')]
+    #[Groups(['readBooking'])]
     private $accommodation;
 
     public function getId(): ?int
