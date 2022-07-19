@@ -102,7 +102,7 @@ class Accommodation
     private $reviews;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'accommodations')]
-    #[Groups(['readAccommodation', 'writeAccommodation'])]
+    #[Groups(['readAccommodation', 'writeAccommodation', 'readBooking'])]
     private $user;
 
     #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: Booking::class)]
