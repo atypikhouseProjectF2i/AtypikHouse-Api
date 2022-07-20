@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Action\NotFoundAction;
+
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\MeController;
+use App\Controller\RolesController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -34,6 +35,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'path' => '/me',
             'method' => 'get',
             'controller' => MeController::class,
+            'read' => false,
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ],
+        'roles' => [
+            'pagination_enabled' => false,
+            'path' => '/roles',
+            'method' => 'get',
+            'controller' => RolesController::class,
             'read' => false,
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]]
