@@ -8,11 +8,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Controller\AccommodationImagesController;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 #[ORM\Entity(repositoryClass: AccommodationRepository::class)]
+#[Vich\Uploadable]
+
 #[ApiResource(
     attributes: ["pagination_enabled" => true],
     collectionOperations: [
@@ -22,6 +27,29 @@ use Symfony\Component\Serializer\Annotation\Groups;
     itemOperations: [
         "get" => ['groups' => ['readAccommodation']],
         "put" => ["security" => "is_granted('ROLE_ADMIN')"],
+        "images" => [
+            'method' => 'POST',
+            'path' => 'accommodations/{id}/images',
+            'deserialize' => false,
+            'controller' => AccommodationImagesController::class,
+            'openapi_context' => [
+                'requestBody' => [
+                    'content' => [
+                        'multipart/form-data' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'file' => [
+                                        'type' => 'string',
+                                        'format' => 'binary'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
     ],
     normalizationContext: ['groups' => ['readAccommodation']],
     denormalizationContext: ['groups' => ['writeAccommodation']]
@@ -111,6 +139,26 @@ class Accommodation
     #[ORM\ManyToOne(targetEntity: Region::class, inversedBy: 'accommodations')]
     #[Groups(['readAccommodation', 'writeAccommodation'])]
     private $region;
+
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $imagesPath;
+
+    /**
+     * @var File|null
+     */
+    #[Vich\UploadableField(mapping: 'accommodation_images', fileNameProperty: 'imagesPath')]
+    private $file;
+
+    /**
+     * @var string|null
+     */
+    #[Groups(['readAccommodation'])]
+    private $fileUrl;
+
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $updateAt;
 
 
     public function __construct()
@@ -443,6 +491,74 @@ class Accommodation
     public function setRegion(?region $region): self
     {
         $this->region = $region;
+
+        return $this;
+    }
+
+
+
+    /**
+     * @return  File|null
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param  File|null $file  
+     */
+    public function setFile(File $file): Accommodation
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    public function getImagesPath(): ?string
+    {
+        return $this->imagesPath;
+    }
+
+    public function setImagesPath(?string $imagesPath): self
+    {
+        $this->imagesPath = $imagesPath;
+
+        return $this;
+    }
+
+    public function getUpdateAt(): ?\DateTimeInterface
+    {
+        return $this->updateAt;
+    }
+
+    public function setUpdateAt(?\DateTimeInterface $updateAt): self
+    {
+        $this->updateAt = $updateAt;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of fileUrl
+     *
+     * @return  string|null
+     */
+    public function getFileUrl()
+    {
+        return $this->fileUrl;
+    }
+
+    /**
+     * Set the value of fileUrl
+     *
+     * @param  string|null  $fileUrl
+     *
+     * @return  self
+     */
+    public function setFileUrl($fileUrl)
+    {
+        $this->fileUrl = $fileUrl;
 
         return $this;
     }

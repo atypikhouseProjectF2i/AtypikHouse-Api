@@ -11,9 +11,6 @@ use App\Entity\TypeAccommodation;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\User;
-use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManager;
-use Doctrine\Persistence\ManagerRegistry;
 
 class AppFixtures extends Fixture
 {
