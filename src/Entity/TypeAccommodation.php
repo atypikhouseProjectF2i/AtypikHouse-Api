@@ -10,16 +10,23 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TypeAccommodationRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [
+        'get' => [
+            'normalization_context' => ['groups' => ['read:type_accommodation']],
+        ],
+    ]
+)]
 class TypeAccommodation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read:type_accommodation'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['readAccommodation'])]
+    #[Groups(['readAccommodation', 'read:type_accommodation'])]
     private $name;
 
     #[ORM\OneToMany(mappedBy: 'typeAccommodation', targetEntity: Accommodation::class)]
