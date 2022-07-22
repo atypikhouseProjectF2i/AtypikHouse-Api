@@ -145,7 +145,7 @@ class Accommodation
     private $imagesPath;
 
     /**
-     * @var File|null
+     * @var Array|null
      */
     #[Vich\UploadableField(mapping: 'accommodation_images', fileNameProperty: 'imagesPath')]
     private $file;
@@ -154,7 +154,7 @@ class Accommodation
      * @var string|null
      */
     #[Groups(['readAccommodation'])]
-    private $fileUrl;
+    private $imageUrl;
 
 
     #[ORM\Column(type: 'datetime', nullable: true)]
@@ -540,25 +540,21 @@ class Accommodation
     }
 
     /**
-     * Get the value of fileUrl
-     *
-     * @return  string|null
+     * Get the value of imageUrl
      */
-    public function getFileUrl()
+    public function getImageUrl()
     {
-        return $this->fileUrl;
+        return $this->imageUrl;
     }
 
     /**
-     * Set the value of fileUrl
-     *
-     * @param  string|null  $fileUrl
+     * Set the value of imageUrl
      *
      * @return  self
      */
-    public function setFileUrl($fileUrl)
+    public function setImageUrl($imageUrl)
     {
-        $this->fileUrl = $fileUrl;
+        $this->imageUrl = $imageUrl;
 
         return $this;
     }

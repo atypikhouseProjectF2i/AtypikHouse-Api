@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Accommodation;
 use Symfony\Component\HttpFoundation\Request;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 class AccommodationImagesController
 {

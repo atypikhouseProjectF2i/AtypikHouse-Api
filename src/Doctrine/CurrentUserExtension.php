@@ -41,7 +41,7 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryIt
                     );
             } else {
                 $queryBuilder
-                    ->andWhere("$alias.user IS NULL");
+                    ->andWhere("$alias.user IS NOT NULL");
             }
         }
     }
