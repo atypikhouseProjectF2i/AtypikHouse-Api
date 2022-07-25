@@ -40,16 +40,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 'security' => [['bearerAuth' => []]]
             ]
         ],
-        'roles' => [
-            'pagination_enabled' => false,
-            'path' => '/roles',
-            'method' => 'get',
-            'controller' => RolesController::class,
-            'read' => false,
-            'openapi_context' => [
-                'security' => [['bearerAuth' => []]]
-            ]
-        ],
         'put' => ["security" => "is_granted('ROLE_ADMIN') or object.owner == user"]
     ],
     normalizationContext: ['groups' => ['read:User']]
@@ -95,6 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $bookings;
 
     #[ORM\Column(type: 'json')]
+    #[Groups(['read:User'])]
     private $roles = [];
 
     public function __construct()

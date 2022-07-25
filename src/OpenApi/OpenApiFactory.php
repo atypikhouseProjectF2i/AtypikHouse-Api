@@ -63,11 +63,6 @@ class OpenApiFactory implements OpenApiFactoryInterface
         $mePathItem = $openApi->getPaths()->getPath('/api/me')->withGet($meOperation);
         $openApi->getPaths()->addPath('/api/me', $mePathItem);
 
-        //add path /api/roles
-        $rolesOperation = $openApi->getPaths()->getPath('/api/roles')->getGet()->withParameters([]);
-        $rolesPathItem = $openApi->getPaths()->getPath('/api/roles')->withGet($rolesOperation);
-        $openApi->getPaths()->addPath('/api/roles', $rolesPathItem);
-
 
         //context on login
         $pathItem = new PathItem(
