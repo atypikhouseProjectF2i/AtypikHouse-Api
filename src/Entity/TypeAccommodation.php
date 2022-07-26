@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     collectionOperations: [
         'get' => [
-            'normalization_context' => ['groups' => ['read:type_accommodation']],
+            'normalization_context' => ['groups' => ['type_accommodation:read']],
         ],
     ]
 )]
@@ -22,11 +22,11 @@ class TypeAccommodation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:type_accommodation'])]
+    #[Groups(['type_accommodation:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['readAccommodation', 'read:type_accommodation'])]
+    #[Groups(['accommodation:read', 'type_accommodation:read'])]
     private $name;
 
     #[ORM\OneToMany(mappedBy: 'typeAccommodation', targetEntity: Accommodation::class)]

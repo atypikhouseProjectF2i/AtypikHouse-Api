@@ -2,7 +2,8 @@
 
 namespace App\Entity;
 
-
+use ApiPlatform\Core\Action\NotFoundAction;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\MeController;
 use App\Repository\UserRepository;
@@ -16,14 +17,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     security: 'is_granted("ROLE_USER")',
-    normalizationContext: ['groups' => ['read:User']],
+    normalizationContext: ['groups' => ['user:read']],
     collectionOperations: [
         'get' => [
-            ['security' => "is_granted('ROLE_ADMIN')"]
+            'security' => "is_granted('ROLE_ADMIN')"
         ]
     ],
     itemOperations: [
-        'get',
+        'get' => [
+            'controller' => NotFoundAction::class,
+            'openapi_context' => ['summary' => 'hidden'],
+            'read' => false,
+            'output' => false
+        ],
         'me' => [
             'pagination_enabled' => false,
             'path' => '/me',
@@ -35,41 +41,44 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
         ],
         'put' => [
-            "security" => "is_granted('ROLE_ADMIN') or object.owner == user",
-            'denormalization_context' => ['groups' => ['put:user']],
+            'security' => "is_granted('ROLE_ADMIN') or object.getUserIdentifier() == user",
+            'denormalization_context' => ['groups' => ['user:put']],
+        ],
+        'delete' => [
+            'security' => "is_granted('ROLE_ADMIN')",
         ]
     ],
 )]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User  implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['readAccommodation', 'readBooking'])]
+    #[Groups(['accommodation:read', 'readBooking'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read:User', 'put:user'])]
+    #[Groups(['user:read', 'user:put'])]
     private $name;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read:User', 'put:user'])]
+    #[Groups(['user:read', 'user:put'])]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read:User', 'put:user'])]
+    #[Groups(['user:read', 'user:put'])]
     private $email;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['put:user'])]
+    #[Groups(['user:put'])]
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read:User', 'put:user'])]
+    #[Groups(['user:read', 'user:put'])]
     private $phone;
 
     #[ORM\Column(type: 'boolean')]
-    #[Groups(['read:User', 'put:user'])]
+    #[Groups(['user:read', 'user:put'])]
     private $newsletter;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Review::class)]
@@ -82,7 +91,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $bookings;
 
     #[ORM\Column(type: 'json')]
-    #[Groups(['read:User', 'put:user'])]
+    #[Groups(['user:read'])]
+    //#[ApiProperty(security: "is_granted('ROLE_ADMIN')")]
     private $roles = [];
 
     public function __construct()

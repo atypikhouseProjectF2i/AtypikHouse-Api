@@ -27,7 +27,7 @@ services:
     arguments: ['@App\OpenApi\OpenApiFactory.inner']
     autoconfigure: false
 
-  # App\Serializer\AccommodationNormalizer:
-  #   decorates: "api_platform.serializer"
-  #   arguments: ['@App\Serializer\AccommodationNormalizer.inner']
+  # App\Serializer\Normalizer:
+  #   class: 'App\Serializer\AccommodationNormalizer'
+  #   decorates: "api_platform.serializer.normalizer.item"
   #   autoconfigure: false

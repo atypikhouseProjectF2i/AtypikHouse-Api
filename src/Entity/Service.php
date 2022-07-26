@@ -42,7 +42,7 @@ class Service
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['readAccommodation'])]
+    #[Groups(['accommodation:read'])]
     private $name;
 
     #[ORM\ManyToMany(targetEntity: Accommodation::class, mappedBy: 'service')]

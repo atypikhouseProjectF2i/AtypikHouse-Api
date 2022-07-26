@@ -25,8 +25,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         "post" => ["security" => "is_granted('ROLE_ADMIN')"],
     ],
     itemOperations: [
-        "get" => ['groups' => ['readAccommodation']],
-        "put" => ["security" => "is_granted('ROLE_ADMIN')"],
+        "get" => ['groups' => ['accommodation:read']],
+        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.getUser() == user"],
         "images" => [
             'method' => 'POST',
             'path' => 'accommodations/{id}/images',
@@ -49,9 +49,15 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                     ]
                 ]
             ]
+        ],
+        'delete' => [
+            'security' => "is_granted('ROLE_ADMIN') or object.getUser() == user",
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ],
         ]
     ],
-    normalizationContext: ['groups' => ['readAccommodation']],
+    normalizationContext: ['groups' => ['accommodation:read']],
     denormalizationContext: ['groups' => ['writeAccommodation']]
 )]
 #[ApiFilter(
@@ -63,81 +69,81 @@ class Accommodation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['readAccommodation'])]
+    #[Groups(['accommodation:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['readAccommodation', 'writeAccommodation', 'readBooking'])]
+    #[Groups(['accommodation:read', 'writeAccommodation', 'readBooking'])]
     private $name;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['readAccommodation', 'writeAccommodation'])]
+    #[Groups(['accommodation:read', 'writeAccommodation'])]
     private $price;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['readAccommodation', 'writeAccommodation'])]
+    #[Groups(['accommodation:read', 'writeAccommodation'])]
     private $surface;
 
     #[ORM\Column(type: 'text')]
-    #[Groups(['readAccommodation', 'writeAccommodation'])]
+    #[Groups(['accommodation:read', 'writeAccommodation'])]
     private $description;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['readAccommodation', 'writeAccommodation'])]
+    #[Groups(['accommodation:read', 'writeAccommodation'])]
     private $address;
 
     #[ORM\Column(type: 'string', length: 20)]
-    #[Groups(['readAccommodation', 'writeAccommodation'])]
+    #[Groups(['accommodation:read', 'writeAccommodation'])]
     private $zipCode;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['readAccommodation', 'writeAccommodation'])]
+    #[Groups(['accommodation:read', 'writeAccommodation'])]
     private $city;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['readAccommodation', 'writeAccommodation'])]
+    #[Groups(['accommodation:read', 'writeAccommodation'])]
     private $nbSleeping;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['readAccommodation', 'writeAccommodation'])]
+    #[Groups(['accommodation:read', 'writeAccommodation'])]
     private $capacityAdult;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['readAccommodation', 'writeAccommodation'])]
+    #[Groups(['accommodation:read', 'writeAccommodation'])]
     private $capacityChild;
 
     #[ORM\ManyToMany(targetEntity: Equipement::class, inversedBy: 'accommodations')]
-    #[Groups(['readAccommodation', 'writeAccommodation'])]
+    #[Groups(['accommodation:read', 'writeAccommodation'])]
     private $equipement;
 
     #[ORM\ManyToMany(targetEntity: Service::class, inversedBy: 'accommodations')]
-    #[Groups(['readAccommodation', 'writeAccommodation'])]
+    #[Groups(['accommodation:read', 'writeAccommodation'])]
     private $service;
 
     #[ORM\ManyToMany(targetEntity: Activity::class, inversedBy: 'accommodations')]
-    #[Groups(['readAccommodation', 'writeAccommodation'])]
+    #[Groups(['accommodation:read', 'writeAccommodation'])]
     private $activity;
 
     #[ORM\ManyToOne(targetEntity: TypeAccommodation::class, inversedBy: 'accommodations')]
-    #[Groups(['readAccommodation', 'writeAccommodation'])]
+    #[Groups(['accommodation:read', 'writeAccommodation'])]
     private $typeAccommodation;
 
     #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: Availablity::class)]
     private $availablities;
 
     #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: Review::class)]
-    #[Groups(['readAccommodation'])]
+    #[Groups(['accommodation:read'])]
     private $reviews;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'accommodations')]
-    #[Groups(['readAccommodation', 'writeAccommodation', 'readBooking'])]
+    #[Groups(['accommodation:read', 'writeAccommodation', 'readBooking'])]
     private $user;
 
     #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: Booking::class)]
     private $bookings;
 
     #[ORM\ManyToOne(targetEntity: Region::class, inversedBy: 'accommodations')]
-    #[Groups(['readAccommodation', 'writeAccommodation'])]
+    #[Groups(['accommodation:read', 'writeAccommodation'])]
     private $region;
 
 
@@ -153,7 +159,7 @@ class Accommodation
     /**
      * @var string|null
      */
-    #[Groups(['readAccommodation'])]
+    #[Groups(['accommodation:read'])]
     private $imageUrl;
 
 
