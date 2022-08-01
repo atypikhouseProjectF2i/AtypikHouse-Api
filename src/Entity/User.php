@@ -12,7 +12,9 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
@@ -21,6 +23,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
     collectionOperations: [
         'get' => [
             'security' => "is_granted('ROLE_ADMIN')"
+        ],
+        'post' => [
+            'security' => "is_granted('PUBLIC_ACCESS')",
+            'denormalization_context' => ['groups' => ['user:post']],
         ]
     ],
     itemOperations: [
@@ -49,6 +55,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ]
     ],
 )]
+#[UniqueEntity('email')]
 class User  implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -58,27 +65,28 @@ class User  implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['user:read', 'user:put'])]
+    #[Groups(['user:read', 'user:put', 'user:post'])]
     private $name;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['user:read', 'user:put'])]
+    #[Groups(['user:read', 'user:put', 'user:post'])]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['user:read', 'user:put'])]
+    #[Groups(['user:read', 'user:put', 'user:post'])]
+    #[Assert\Email]
     private $email;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['user:put'])]
+    #[Groups(['user:put', 'user:post'])]
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['user:read', 'user:put'])]
+    #[Groups(['user:read', 'user:put', 'user:post'])]
     private $phone;
 
     #[ORM\Column(type: 'boolean')]
-    #[Groups(['user:read', 'user:put'])]
+    #[Groups(['user:read', 'user:put', 'user:post'])]
     private $newsletter;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Review::class)]
