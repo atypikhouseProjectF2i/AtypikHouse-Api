@@ -1,0 +1,3 @@
+<?php //route_name_10738b078c98bd3f9e818776507f3ecb
+
+return [PHP_INT_MAX, 'api_regions_get_item'];

@@ -1,0 +1,3 @@
+<?php //App%255CEntity%255CAccommodation%2523getAvailablities
+
+return [PHP_INT_MAX, []];

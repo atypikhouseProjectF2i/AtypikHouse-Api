@@ -1,0 +1,3 @@
+<?php //route_name_8c33b9d567e3571db3d42b612bdf5b6b
+
+return [PHP_INT_MAX, 'api_type_accommodations_get_item'];
