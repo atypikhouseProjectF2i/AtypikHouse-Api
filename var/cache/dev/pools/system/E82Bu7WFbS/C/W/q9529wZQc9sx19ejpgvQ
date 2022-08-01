@@ -1,3 +1,0 @@
-<?php //route_name_90aa02b8261664a4067de1f67945958c
-
-return [PHP_INT_MAX, 'api_accommodations_get_item'];
