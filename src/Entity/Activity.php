@@ -11,7 +11,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ActivityRepository::class)]
 #[ApiResource(
+    attributes: ["pagination_enabled" => false],
+    collectionOperations: [
+        'get' => [
+            'normalization_context' => ['groups' => ['activity:read']]
+        ]
+    ],
     itemOperations: [
+        "get"  => ['groups' => ['activity:read']],
         "put" => [
             "security" => "is_granted('ROLE_ADMIN')",
             'openapi_context' => [
@@ -34,7 +41,7 @@ class Activity
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['readAccommodation'])]
+    #[Groups(['activity:read', 'accommodation:read'])]
     private $name;
 
     #[ORM\ManyToMany(targetEntity: Accommodation::class, mappedBy: 'activity')]
