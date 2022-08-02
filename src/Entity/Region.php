@@ -30,7 +30,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
     ],
     collectionOperations: [
-        "get",
+        "get" => [
+            'normalization_context' => ['groups' => ['regions:read']]
+        ],
         "post" => [
             "security" => "is_granted('ROLE_ADMIN')",
             'openapi_context' => [
@@ -47,7 +49,7 @@ class Region
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['accommodation:read'])]
+    #[Groups(['accommodation:read', 'regions:read'])]
     private $name;
 
     #[ORM\OneToMany(mappedBy: 'region', targetEntity: Accommodation::class)]
