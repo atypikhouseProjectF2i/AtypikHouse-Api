@@ -12,6 +12,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
 #[ApiResource(
     itemOperations: [
+        "get"  => [
+            'normalization_context' => ['groups' => ['service:read']]
+        ],
         "put" => [
             "security" => "is_granted('ROLE_ADMIN')",
             'openapi_context' => [
@@ -26,6 +29,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
     ],
     collectionOperations: [
+        "get" => [
+            'normalization_context' => ['groups' => ['service:read']]
+        ],
         "post" => [
             "security" => "is_granted('ROLE_ADMIN')",
             'openapi_context' => [
@@ -42,7 +48,7 @@ class Service
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['accommodation:read'])]
+    #[Groups(['accommodation:read', 'service:read'])]
     private $name;
 
     #[ORM\ManyToMany(targetEntity: Accommodation::class, mappedBy: 'service')]

@@ -18,7 +18,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ]
     ],
     itemOperations: [
-        "get"  => ['groups' => ['activity:read']],
+        "get"  => [
+            'normalization_context' => ['groups' => ['activity:read']]
+        ],
         "put" => [
             "security" => "is_granted('ROLE_ADMIN')",
             'openapi_context' => [

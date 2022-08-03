@@ -7,22 +7,26 @@ use App\Repository\EquipementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EquipementRepository::class)]
 #[ApiResource(
     itemOperations: [
+        "get" => [
+            "normalization_context" => ['groups' => ['equipement:read']]
+        ],
         "put" => [
             "security" => "is_granted('ROLE_ADMIN')",
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]]
-            ]
+            ],
+            "denormalization_context" => ['groups' => ['equipement:write']]
         ],
         "delete" => [
             "security" => "is_granted('ROLE_ADMIN')",
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]]
-            ]
+            ],
         ],
     ],
 )]
@@ -34,6 +38,7 @@ class Equipement
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['equipement:write', 'equipement:read'])]
     private $name;
 
     #[ORM\ManyToMany(targetEntity: Accommodation::class, mappedBy: 'equipement')]

@@ -2,13 +2,16 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\ReviewRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ApiResource()]
+#[ApiFilter(SearchFilter::class, properties: ['accommodation.id' => 'exact'])]
 class Review
 {
     #[ORM\Id]
@@ -17,11 +20,11 @@ class Review
     private $id;
 
     #[ORM\Column(type: 'text')]
-    #[Groups(['readAccommodation'])]
+    #[Groups(['accommodation:read'])]
     private $comment;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['readAccommodation'])]
+    #[Groups(['accommodation:read'])]
     private $score;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reviews')]
