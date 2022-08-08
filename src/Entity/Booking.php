@@ -12,11 +12,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
 #[ApiResource(
     attributes: ["pagination_enabled" => false],
-    subresourceOperations: [],
     collectionOperations: [
         "get",
     ],
-    normalizationContext: ['groups' => ['readBooking']],
+    normalizationContext: ['groups' => ['booking:read']],
 )]
 #[ApiFilter(SearchFilter::class, properties: ['accommodation.user' => 'exact'])]
 class Booking
@@ -27,23 +26,22 @@ class Booking
     private $id;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['readBooking'])]
+    #[Groups(['booking:read', 'accommodation:read'])]
     private $total;
 
     #[ORM\Column(type: 'date')]
-    #[Groups(['readBooking'])]
+    #[Groups(['booking:read', 'accommodation:read'])]
     private $startDate;
 
     #[ORM\Column(type: 'date')]
-    #[Groups(['readBooking'])]
+    #[Groups(['booking:read'])]
     private $endDate;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'bookings')]
-    #[Groups(['readBooking'])]
+    #[Groups(['booking:read'])]
     private $user;
 
     #[ORM\ManyToOne(targetEntity: Accommodation::class, inversedBy: 'bookings')]
-    #[Groups(['readBooking'])]
     private $accommodation;
 
     public function getId(): ?int

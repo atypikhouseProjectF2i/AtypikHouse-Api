@@ -7,10 +7,19 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\ReviewRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ReviewPostController;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    collectionOperations: [
+        "post" => [
+            'security_post_denormalize' => 'is_granted("COMMENT_CREATE", object)'
+        ]
+    ],
+    denormalizationContext: ['groups' => ['review:write']],
+)]
+
 #[ApiFilter(SearchFilter::class, properties: ['accommodation.id' => 'exact'])]
 class Review
 {
@@ -20,17 +29,19 @@ class Review
     private $id;
 
     #[ORM\Column(type: 'text')]
-    #[Groups(['accommodation:read'])]
+    #[Groups(['accommodation:read', 'review:write'])]
     private $comment;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['accommodation:read'])]
+    #[Groups(['accommodation:read', 'review:write'])]
     private $score;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reviews')]
+    #[Groups(['review:write'])]
     private $user;
 
     #[ORM\ManyToOne(targetEntity: Accommodation::class, inversedBy: 'reviews')]
+    #[Groups(['review:write'])]
     private $accommodation;
 
     public function getId(): ?int

@@ -69,7 +69,7 @@ class Accommodation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['accommodation:read'])]
+    #[Groups(['accommodation:read', 'review:write'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -458,6 +458,7 @@ class Accommodation
 
         return $this;
     }
+
 
     /**
      * @return Collection<int, Booking>
