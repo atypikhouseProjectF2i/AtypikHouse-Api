@@ -7,14 +7,16 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\ReviewRepository;
 use Doctrine\ORM\Mapping as ORM;
-use ReviewPostController;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ApiResource(
     collectionOperations: [
         "post" => [
-            'security_post_denormalize' => 'is_granted("COMMENT_CREATE", object)'
+            'security_post_denormalize' => 'is_granted("COMMENT_CREATE", object)',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ],
         ]
     ],
     denormalizationContext: ['groups' => ['review:write']],
