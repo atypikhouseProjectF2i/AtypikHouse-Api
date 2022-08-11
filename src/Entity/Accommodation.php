@@ -26,7 +26,12 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     ],
     itemOperations: [
         "get" => ['groups' => ['accommodation:read']],
-        "put" => ["security" => "is_granted('ROLE_ADMIN') or object.getUser() == user"],
+        "put" => [
+            "security_post_denormalize" => "is_granted('ROLE_ADMIN') or object.getUser() == user.getUserIdentifier()",
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ],
+        ],
         "images" => [
             'method' => 'POST',
             'path' => 'accommodations/{id}/images',
@@ -51,7 +56,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             ]
         ],
         'delete' => [
-            'security' => "is_granted('ROLE_ADMIN') or object.getUser() == user",
+            'security' => "is_granted('ROLE_ADMIN') or object.getUser() == user.getUserIdentifier()",
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]]
             ],

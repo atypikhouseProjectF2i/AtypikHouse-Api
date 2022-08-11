@@ -18,7 +18,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
-    security: 'is_granted("ROLE_USER")',
     normalizationContext: ['groups' => ['user:read']],
     collectionOperations: [
         'get' => [
@@ -47,7 +46,10 @@ use Symfony\Component\Validator\Constraints as Assert;
             ],
         ],
         'put' => [
-            'security' => "is_granted('ROLE_ADMIN') or object.getUserIdentifier() == user",
+            "security_post_denormalize" => "object.getUserIdentifier() == user.getUserIdentifier() and previous_object.getUserIdentifier() == user.getUserIdentifier()",
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ],
             'denormalization_context' => ['groups' => ['user:put']],
         ],
         'delete' => [
@@ -78,7 +80,7 @@ class User  implements UserInterface, PasswordAuthenticatedUserInterface
     private $email;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['user:put', 'user:post'])]
+    #[Groups(['user:post'])]
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
