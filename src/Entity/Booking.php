@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     normalizationContext: ['groups' => ['booking:read']],
 )]
-#[ApiFilter(SearchFilter::class, properties: ['accommodation.user' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['accommodation.user' => 'exact', 'user' => 'exact'])]
 class Booking
 {
     #[ORM\Id]
@@ -42,6 +42,7 @@ class Booking
     private $user;
 
     #[ORM\ManyToOne(targetEntity: Accommodation::class, inversedBy: 'bookings')]
+    #[Groups(['booking:read'])]
     private $accommodation;
 
     public function getId(): ?int

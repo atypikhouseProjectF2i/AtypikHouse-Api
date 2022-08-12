@@ -46,7 +46,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             ],
         ],
         'put' => [
-            "security_post_denormalize" => "object.getUserIdentifier() == user.getUserIdentifier() and previous_object.getUserIdentifier() == user.getUserIdentifier()",
+            'security_post_denormalize' => "object.getUserIdentifier() == user.getUserIdentifier()",
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]]
             ],
@@ -84,7 +84,7 @@ class User  implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['user:read', 'user:put', 'user:post'])]
+    #[Groups(['user:read', 'user:put', 'user:post', 'accommodation:read'])]
     private $phone;
 
     #[ORM\Column(type: 'boolean')]

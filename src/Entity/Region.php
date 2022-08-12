@@ -49,7 +49,7 @@ class Region
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['accommodation:read', 'regions:read'])]
+    #[Groups(['accommodation:read', 'regions:read', 'booking:read'])]
     private $name;
 
     #[ORM\OneToMany(mappedBy: 'region', targetEntity: Accommodation::class)]

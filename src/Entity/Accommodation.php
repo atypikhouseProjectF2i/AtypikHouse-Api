@@ -74,11 +74,11 @@ class Accommodation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['accommodation:read', 'review:write'])]
+    #[Groups(['accommodation:read', 'review:write', 'booking:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['accommodation:read', 'writeAccommodation', 'readBooking'])]
+    #[Groups(['accommodation:read', 'writeAccommodation', 'booking:read'])]
     private $name;
 
     #[ORM\Column(type: 'integer')]
@@ -141,14 +141,14 @@ class Accommodation
     private $reviews;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'accommodations')]
-    #[Groups(['accommodation:read', 'writeAccommodation', 'readBooking'])]
+    #[Groups(['accommodation:read', 'writeAccommodation'])]
     private $user;
 
     #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: Booking::class)]
     private $bookings;
 
     #[ORM\ManyToOne(targetEntity: Region::class, inversedBy: 'accommodations')]
-    #[Groups(['accommodation:read', 'writeAccommodation'])]
+    #[Groups(['accommodation:read', 'writeAccommodation', 'booking:read'])]
     private $region;
 
 
@@ -164,7 +164,7 @@ class Accommodation
     /**
      * @var string|null
      */
-    #[Groups(['accommodation:read'])]
+    #[Groups(['accommodation:read', 'booking:read'])]
     private $imageUrl;
 
 
