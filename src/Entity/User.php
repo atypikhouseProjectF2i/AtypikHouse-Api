@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Action\NotFoundAction;
-use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\MeController;
+use App\Controller\ResetPasswordController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -52,6 +53,16 @@ use Symfony\Component\Validator\Constraints as Assert;
             ],
             'denormalization_context' => ['groups' => ['user:put']],
         ],
+        'reset_password' => [
+            "method" => "PUT",
+            "path" => "/users/{id}/reset_password",
+            "controller" => ResetPasswordController::class,
+            "openapi_context" => [
+                "summary" => "Update Password of User"
+            ],
+            'security_post_denormalize' => "object.getUserIdentifier() == user.getUserIdentifier()",
+            'denormalization_context' => ['groups' => ['user:put_password']],
+        ],
         'delete' => [
             'security' => "is_granted('ROLE_ADMIN')",
         ]
@@ -80,7 +91,6 @@ class User  implements UserInterface, PasswordAuthenticatedUserInterface
     private $email;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['user:post'])]
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -104,6 +114,17 @@ class User  implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read'])]
     //#[ApiProperty(security: "is_granted('ROLE_ADMIN')")]
     private $roles = [];
+
+    #[Groups(['user:post'])]
+    #[SerializedName("password")]
+    private $plainPassword;
+
+    #[Groups(['user:put_password'])]
+    private $oldPassword;
+
+    #[Groups(['user:put_password'])]
+    private $newPassword;
+
 
     public function __construct()
     {
@@ -316,5 +337,65 @@ class User  implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * Get the value of newPassword
+     */
+    public function getNewPassword()
+    {
+        return $this->newPassword;
+    }
+
+    /**
+     * Set the value of newPassword
+     *
+     * @return  self
+     */
+    public function setNewPassword($newPassword)
+    {
+        $this->newPassword = $newPassword;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of plainPassword
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * Set the value of plainPassword
+     *
+     * @return  self
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of oldPassword
+     */
+    public function getOldPassword()
+    {
+        return $this->oldPassword;
+    }
+
+    /**
+     * Set the value of oldPassword
+     *
+     * @return  self
+     */
+    public function setOldPassword($oldPassword)
+    {
+        $this->oldPassword = $oldPassword;
+
+        return $this;
     }
 }
