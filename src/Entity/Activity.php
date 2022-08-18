@@ -12,9 +12,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ActivityRepository::class)]
 #[ApiResource(
     attributes: ["pagination_enabled" => false],
+    denormalizationContext: ['groups' => ['activity:write']],
     collectionOperations: [
         'get' => [
             'normalization_context' => ['groups' => ['activity:read']]
+        ],
+        'post' => [
+            "security_post_denormalize" => "is_granted('ROLE_ADMIN')",
         ]
     ],
     itemOperations: [
@@ -22,7 +26,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'normalization_context' => ['groups' => ['activity:read']]
         ],
         "put" => [
-            "security" => "is_granted('ROLE_ADMIN')",
+            "security_post_denormalize" => "is_granted('ROLE_ADMIN')",
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]]
             ]
@@ -40,10 +44,11 @@ class Activity
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['activity:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['activity:read', 'accommodation:read'])]
+    #[Groups(['activity:read', 'accommodation:read', 'activity:write'])]
     private $name;
 
     #[ORM\ManyToMany(targetEntity: Accommodation::class, mappedBy: 'activity')]

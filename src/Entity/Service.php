@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'normalization_context' => ['groups' => ['service:read']]
         ],
         "put" => [
-            "security" => "is_granted('ROLE_ADMIN')",
+            "security_post_denormalize" => "is_granted('ROLE_ADMIN')",
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]]
             ]
@@ -33,7 +33,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'normalization_context' => ['groups' => ['service:read']]
         ],
         "post" => [
-            "security" => "is_granted('ROLE_ADMIN')",
+            "security_post_denormalize" => "is_granted('ROLE_ADMIN')",
+            "denormalizetion_context" => ['groups' => ['service:write']],
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]]
             ]
@@ -45,10 +46,11 @@ class Service
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['service:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['accommodation:read', 'service:read'])]
+    #[Groups(['accommodation:read', 'service:read', 'service:write'])]
     private $name;
 
     #[ORM\ManyToMany(targetEntity: Accommodation::class, mappedBy: 'service')]

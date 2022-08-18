@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     normalizationContext: ['groups' => ['booking:read']],
 )]
-#[ApiFilter(SearchFilter::class, properties: ['accommodation.user' => 'exact', 'user' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['accommodation.user' => 'exact', 'user' => 'exact', 'accommodation' => 'exact'])]
 class Booking
 {
     #[ORM\Id]

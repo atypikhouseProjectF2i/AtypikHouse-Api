@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             "normalization_context" => ['groups' => ['equipement:read']]
         ],
         "put" => [
-            "security" => "is_granted('ROLE_ADMIN')",
+            "security_post_denormalize" => "is_granted('ROLE_ADMIN')",
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]]
             ],
@@ -29,12 +29,25 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
         ],
     ],
+    collectionOperations: [
+        "get" => [
+            'normalization_context' => ['groups' => ['equipement:read']]
+        ],
+        "post" => [
+            "security_post_denormalize" => "is_granted('ROLE_ADMIN')",
+            "denormalizetion_context" => ['groups' => ['equipement:write']],
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ],
+    ]
 )]
 class Equipement
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['equipement:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
