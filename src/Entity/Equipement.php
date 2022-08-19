@@ -51,7 +51,7 @@ class Equipement
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['equipement:write', 'equipement:read'])]
+    #[Groups(['equipement:write', 'equipement:read', 'accommodation:read'])]
     private $name;
 
     #[ORM\ManyToMany(targetEntity: Accommodation::class, mappedBy: 'equipement')]

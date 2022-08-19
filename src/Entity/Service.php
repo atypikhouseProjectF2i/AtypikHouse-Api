@@ -11,6 +11,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
 #[ApiResource(
+    attributes: ["pagination_enabled" => false],
+    denormalizationContext: ['groups' => ['service:write']],
     itemOperations: [
         "get"  => [
             'normalization_context' => ['groups' => ['service:read']]
@@ -34,7 +36,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
         "post" => [
             "security_post_denormalize" => "is_granted('ROLE_ADMIN')",
-            "denormalizetion_context" => ['groups' => ['service:write']],
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]]
             ]
@@ -50,7 +51,7 @@ class Service
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['accommodation:read', 'service:read', 'service:write'])]
+    #[Groups(['service:read', 'service:write', 'accommodation:read'])]
     private $name;
 
     #[ORM\ManyToMany(targetEntity: Accommodation::class, mappedBy: 'service')]
