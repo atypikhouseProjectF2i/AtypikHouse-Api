@@ -7,6 +7,7 @@ use App\Entity\Activity;
 use App\Entity\Equipement;
 use App\Entity\Region;
 use App\Entity\Service;
+use App\Entity\ServiceAcco;
 use App\Entity\TypeAccommodation;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -98,7 +99,7 @@ class AppFixtures extends Fixture
         // creation de services
         $service_tab = ["petit-déjeuner", "ménage", "cuisinier"];
         for ($i = 0; $i < count($service_tab); $i++) {
-            $service = new Service();
+            $service = new ServiceAcco();
             $service->setName($service_tab[$i]);
             $manager->persist($service);
         }

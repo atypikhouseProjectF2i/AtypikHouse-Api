@@ -3,13 +3,13 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\ServiceRepository;
+use App\Repository\ServiceAccoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: ServiceRepository::class)]
+#[ORM\Entity(repositoryClass: ServiceAccoRepository::class)]
 #[ApiResource(
     attributes: ["pagination_enabled" => false],
     denormalizationContext: ['groups' => ['service:write']],
@@ -42,20 +42,20 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
     ]
 )]
-class Service
+class ServiceAcco
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column]
     #[Groups(['service:read'])]
-    private $id;
+    private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['service:read', 'service:write', 'accommodation:read'])]
-    private $name;
+    #[ORM\Column(length: 255)]
+    #[Groups(['service:read', 'accommodation:read', 'service:write'])]
+    private ?string $name = null;
 
-    #[ORM\ManyToMany(targetEntity: Accommodation::class, mappedBy: 'service')]
-    private $accommodations;
+    #[ORM\ManyToMany(targetEntity: Accommodation::class, mappedBy: 'serviceAcco')]
+    private Collection $accommodations;
 
     public function __construct()
     {
@@ -90,8 +90,8 @@ class Service
     public function addAccommodation(Accommodation $accommodation): self
     {
         if (!$this->accommodations->contains($accommodation)) {
-            $this->accommodations[] = $accommodation;
-            $accommodation->addService($this);
+            $this->accommodations->add($accommodation);
+            $accommodation->addServiceAcco($this);
         }
 
         return $this;
@@ -100,7 +100,7 @@ class Service
     public function removeAccommodation(Accommodation $accommodation): self
     {
         if ($this->accommodations->removeElement($accommodation)) {
-            $accommodation->removeService($this);
+            $accommodation->removeServiceAcco($this);
         }
 
         return $this;

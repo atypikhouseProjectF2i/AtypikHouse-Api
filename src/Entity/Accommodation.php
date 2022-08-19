@@ -126,9 +126,9 @@ class Accommodation
     #[Groups(['accommodation:read', 'accommodation:write'])]
     private $equipement;
 
-    #[ORM\ManyToMany(targetEntity: Service::class, inversedBy: 'accommodations')]
+    #[ORM\ManyToMany(targetEntity: ServiceAcco::class, inversedBy: 'accommodations')]
     #[Groups(['accommodation:read', 'accommodation:write'])]
-    private $service;
+    private Collection $serviceAcco;
 
     #[ORM\ManyToMany(targetEntity: Activity::class, inversedBy: 'accommodations')]
     #[Groups(['accommodation:read', 'accommodation:write'])]
@@ -177,14 +177,16 @@ class Accommodation
     private $updateAt;
 
 
+
+
     public function __construct()
     {
         $this->equipement = new ArrayCollection();
-        $this->service = new ArrayCollection();
         $this->activity = new ArrayCollection();
         $this->availablities = new ArrayCollection();
         $this->reviews = new ArrayCollection();
         $this->bookings = new ArrayCollection();
+        $this->serviceAcco = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -337,30 +339,6 @@ class Accommodation
         return $this;
     }
 
-    /**
-     * @return Collection<int, Service>
-     */
-    public function getService(): Collection
-    {
-        return $this->service;
-    }
-
-
-    public function addService(Service $service): self
-    {
-        if (!$this->service->contains($service)) {
-            $this->service[] = $service;
-        }
-
-        return $this;
-    }
-
-    public function removeService(Service $service): self
-    {
-        $this->service->removeElement($service);
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Activity>
@@ -573,6 +551,30 @@ class Accommodation
     public function setImageUrl($imageUrl)
     {
         $this->imageUrl = $imageUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ServiceAcco>
+     */
+    public function getServiceAcco(): Collection
+    {
+        return $this->serviceAcco;
+    }
+
+    public function addServiceAcco(ServiceAcco $serviceAcco): self
+    {
+        if (!$this->serviceAcco->contains($serviceAcco)) {
+            $this->serviceAcco->add($serviceAcco);
+        }
+
+        return $this;
+    }
+
+    public function removeServiceAcco(ServiceAcco $serviceAcco): self
+    {
+        $this->serviceAcco->removeElement($serviceAcco);
 
         return $this;
     }
