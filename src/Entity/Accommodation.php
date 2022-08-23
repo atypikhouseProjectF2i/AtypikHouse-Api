@@ -19,7 +19,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[Vich\Uploadable]
 
 #[ApiResource(
-    attributes: ["pagination_enabled" => true],
+    attributes: ["pagination_client_enabled" => true],
     collectionOperations: [
         "get",
         "post" => [
@@ -72,7 +72,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 #[ApiFilter(
     SearchFilter::class,
-    properties: ['user' => 'exact'],
+    properties: [
+        'user' => 'exact'
+    ]
 )]
 class Accommodation
 {
