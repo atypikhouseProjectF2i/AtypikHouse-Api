@@ -44,7 +44,7 @@ class Activity
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['activity:read'])]
+    #[Groups(['activity:read', 'accommodation:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
