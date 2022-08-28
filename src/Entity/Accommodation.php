@@ -32,7 +32,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     itemOperations: [
         "get" => ['groups' => ['accommodation:read']],
         "put" => [
-            "security_post_denormalize" => "is_granted('ROLE_ADMIN') or object.getUser() == user.getUserIdentifier()",
+            "security_post_denormalize" => "is_granted('ROLE_ADMIN') or object.getUser() == user",
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]]
             ],
@@ -61,7 +61,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             ]
         ],
         'delete' => [
-            'security' => "is_granted('ROLE_ADMIN') or object.getUser() == user.getUserIdentifier()",
+            'security' => "is_granted('ROLE_ADMIN') or object.getUser() == user",
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]]
             ],
