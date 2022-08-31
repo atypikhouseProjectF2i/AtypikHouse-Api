@@ -41,6 +41,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             'method' => 'POST',
             'path' => 'accommodations/{id}/images',
             'deserialize' => false,
+            "security_post_denormalize" => "is_granted('ROLE_ADMIN') or object.getUser() == user",
             'controller' => AccommodationImagesController::class,
             'openapi_context' => [
                 'requestBody' => [

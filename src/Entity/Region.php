@@ -46,6 +46,7 @@ class Region
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['accommodation:read', 'regions:read', 'booking:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]

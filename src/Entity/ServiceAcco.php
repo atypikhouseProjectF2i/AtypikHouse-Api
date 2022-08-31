@@ -47,7 +47,7 @@ class ServiceAcco
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['service:read'])]
+    #[Groups(['service:read', 'accommodation:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
