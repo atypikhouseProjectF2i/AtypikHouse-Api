@@ -19,7 +19,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[Vich\Uploadable]
 
 #[ApiResource(
-    attributes: ["pagination_client_enabled" => true],
     collectionOperations: [
         "get",
         "post" => [
@@ -68,14 +67,14 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             ],
         ]
     ],
+    subresourceOperations: [
+        'api_users_accommodations_get_subresource' => [
+            'security' => "is_granted('ROLE_ADMIN') or user.getId() == id",
+        ],
+    ],
+    attributes: ["pagination_client_enabled" => true],
+    denormalizationContext: ['groups' => ['accommodation:write']],
     normalizationContext: ['groups' => ['accommodation:read']],
-    denormalizationContext: ['groups' => ['accommodation:write']]
-)]
-#[ApiFilter(
-    SearchFilter::class,
-    properties: [
-        'user' => 'exact'
-    ]
 )]
 class Accommodation
 {

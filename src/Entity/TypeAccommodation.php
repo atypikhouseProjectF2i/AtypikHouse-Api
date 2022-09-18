@@ -22,7 +22,7 @@ class TypeAccommodation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['type_accommodation:read'])]
+    #[Groups(['type_accommodation:read', 'accommodation:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]

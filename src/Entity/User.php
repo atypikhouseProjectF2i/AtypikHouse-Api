@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Action\NotFoundAction;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Controller\MeController;
 use App\Controller\ResetPasswordController;
 use App\Repository\UserRepository;
@@ -19,7 +20,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['user:read']],
     collectionOperations: [
         'get' => [
             'security' => "is_granted('ROLE_ADMIN')"
@@ -67,6 +67,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             'security' => "is_granted('ROLE_ADMIN')",
         ]
     ],
+    normalizationContext: ['groups' => ['user:read']],
 )]
 #[UniqueEntity('email')]
 class User  implements UserInterface, PasswordAuthenticatedUserInterface
@@ -105,6 +106,7 @@ class User  implements UserInterface, PasswordAuthenticatedUserInterface
     private $reviews;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Accommodation::class)]
+    #[ApiSubresource]
     private $accommodations;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Booking::class)]
